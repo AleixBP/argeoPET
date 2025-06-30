@@ -1,0 +1,8 @@
+parallelproj = 1.4.0 # essential. for ray tracing, version important
+libparallelproj = 1.4.0 # essential.
+numpy >= 1.23.5 # or cupy, or both
+cupy >= 11.4.0 # or numpy, or both
+matplotlib >= 3.6.2
+plt-wrapper >= 0.0.2 # allows cupy and numpy to share the same plotting grammar
+scipy >= 1.9.3 # just for ndimage.zoom if using cupy, not essential
+scikit-image >= 0.20.0 # only for butterworth filter, used in bpf and build_pt1, not essential

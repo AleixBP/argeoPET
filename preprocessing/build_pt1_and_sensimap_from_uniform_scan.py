@@ -157,7 +157,8 @@ if False:
     from argeoPET.bpf import bpf_3D
     # TO DO: do not really need the data at once here since im filtering after
     #nsets = 4; nsets_used = 1
-    vol = bpf_3D(dets, Ns=310, radius=radius, half_axial_length=half_axial_length, factor=2.) 
+    limit_angle = np.arctan(half_axial_length/radius)
+    vol = bpf_3D(dets, vol_shape=Ps.vol_shp, radius=radius, half_axial_length=half_axial_length, factor=2., limit_angle=limit_angle, padded_vol_shape = tuple((584,450,450))) 
     plt.imshow(vol[10:-10,10:-10,10:-10].sum(axis=0))
     plt.imshow(vol[10:-10,10:-10,10:-10].sum(axis=1))
     plt.imshow(vol[10:-10,10:-10,10:-10].sum(axis=2))
@@ -186,7 +187,7 @@ elif False:
     plt.imshow(result_butt.sum(axis=0))
     #np.save("310_uniform_rec_osem.npy", np.array(result_butt))
 
-else:
+else: #preferred
     
     do_filter = .075# None
     from argeoPET.optimization_algorithms import OSEM_TV

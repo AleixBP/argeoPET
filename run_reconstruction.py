@@ -70,3 +70,7 @@ plt.imshow(vol.reshape(Ps.vol_shp).sum(axis=2)); plt.show()
 plt.imshow(vol.reshape(Ps.vol_shp).sum(axis=1)[20:390, 20:280]); plt.show()
 plt.imshow(vol.reshape(Ps.vol_shp).sum(axis=0)[20:280, 20:280]); plt.show()
 plt.imshow(vol.reshape(Ps.vol_shp).sum(axis=2)[50:350, 50:250]); plt.show()
+
+
+## Test
+# pl = plt.imshow((vol-np.load("data/example_reconstruction.npy")).reshape(Ps.vol_shp).sum(axis=1), vmax=np.max(vol.reshape(Ps.vol_shp).sum(axis=1))); plt.colorbar(pl); plt.show()

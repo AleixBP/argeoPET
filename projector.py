@@ -3,7 +3,7 @@ from argeoPET import array_lib as np
 # PROJECTION and BACKPROJECTION class for LM data
 class project_3D_subsets():
       
-    def __init__(self, detections, nsubsets, norm=None, backg=1e-5, data=1., pt1=None, vol_shape=(402,310,310), radius=17, half_axial_length=22.05, is_3d = True, isotropic = False, num_chunks=1, check_inside=False):  
+    def __init__(self, detections, nsubsets, norm=None, backg=1e-5, data=1., pt1=None, vol_shape=(402,310,310), radius=17, half_axial_length=22.05, is_3d = True, num_chunks=1, check_inside=False):  
         
         
         self.vol_shp = vol_shape #2D format is (1, N, N)
