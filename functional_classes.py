@@ -16,7 +16,7 @@ class KLP():
         s = self.Ps.subsets[ind] if s is None else s
 
         if np.any(vol<0):
-            return np.infty
+            return np.inf
         else:        
             return np.sum(self.Ps.pt1 * vol) \
                    - cps * np.sum(self.Ps.data[s] \
@@ -73,7 +73,7 @@ class diff_KLDivergence(): # convex, separable
 
         #with np.errstate(divide='ignore'):
         if np.any(x<0):
-            return np.infty
+            return np.inf
         else:
             return np.sum(x + self.beta - self.data + self.data*np.log(self.data/(x+self.beta)))
 
@@ -184,7 +184,7 @@ class positive_class:
                 def __init__(self):
                     pass
                 def __call__(self, x):
-                    return np.infty if bool(np.any(x<0)) else 1.
+                    return np.inf if bool(np.any(x<0)) else 1.
                 def prox(self, x, tau=1.):
                     return np.maximum(x, 0.)
 

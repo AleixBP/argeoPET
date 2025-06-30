@@ -73,7 +73,7 @@ class project_3D_subsets():
             
         
         # Compatibility with operators
-        self.lip = np.infty
+        self.lip = np.inf
         self.eigen_min = 0
         self.dim = [int(np.prod(np.asarray(self.vol_shp))), int(np.prod(np.asarray(self.sino_shp)))]
         self.vol_dim = self.dim[0]
