@@ -1,5 +1,5 @@
-parallelproj = 1.4.0 # essential. for ray tracing, version important
-libparallelproj = 1.4.0 # essential.
+parallelproj == 1.4.0 # essential. for ray tracing, version important
+libparallelproj == 1.4.0 # essential.
 numpy >= 1.23.5 # or cupy, or both
 cupy >= 11.4.0 # or numpy, or both
 matplotlib >= 3.6.2
