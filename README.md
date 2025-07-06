@@ -44,4 +44,4 @@ Download and merge the following two zips:
 
 ## 📌 Notes
 
-- GPU support is required for Cupy
+- GPU support is required for CuPy
