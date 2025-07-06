@@ -3,10 +3,8 @@ sys.path.append('../')
 sys.path.append('../../')
 from argeoPET import array_lib as np
 import numpy
-from plt import plt
 import optimization_algorithms as algos
-np.cuda.Device(3).use()
-#parproj3 conda environment
+#np.cuda.Device(3).use()
 #EVERYTHING that goes into the projector MUST BE FLOAT32
 
 
@@ -23,6 +21,7 @@ radius = 17.; half_axial_length = 22.05
 #### Reconstruction parameters
 Ns = 310; vol_shape = (int(Ns*half_axial_length/radius), Ns, Ns) #(1, Ns, Ns) for 2D
 nsubsets = 30 # use 1/30th of the data at a time for the OSEM algorithm
+maxiter = 70 # number of OSEM iterations
 lam = 1. # regularization parameter
 
 #### Corrections/Normalization
@@ -55,15 +54,16 @@ Ps = project_3D_subsets(mouse_wp, nsubsets, vol_shape=vol_shape, backg=backgroun
 
 #### LOAD PT1 and NORMALIZATIONS INTO THE PROJECTOR
 from normalizations import load_pt1, compute_normalization_from_mumap_and_sensimap
-Ps.pt1 = load_pt1(pt1_path)
+Ps.pt1 = load_pt1(pt1_path, vol_shape)
 Ps.norm = compute_normalization_from_mumap_and_sensimap(Ps, att_path, sensi_path, percentile=20)
 
 #### RUN TV ALGO
 comp = np.percentile(Ps.pt1, 20).astype(np.float32)
-vol = algos.OSEM_TV(Ps, init=None, maxiter=70, maxiter_prox=30, lam=lam, comp=comp, force_full=False)
+vol = algos.OSEM_TV(Ps, init=None, maxiter=maxiter, maxiter_prox=30, lam=lam, comp=comp, force_full=False)
 vol = algos.OSEM_TV(Ps, init=vol, maxiter=2, maxiter_prox=30, lam=lam, comp=comp, force_full=True) # run two iterations with all dataset to "ensure" convergence
 
 #### PLOT
+from plt import plt
 pl = plt.imshow(vol.reshape(Ps.vol_shp).sum(axis=1)); plt.colorbar(pl); plt.show()
 plt.imshow(vol.reshape(Ps.vol_shp).sum(axis=0)); plt.show()
 plt.imshow(vol.reshape(Ps.vol_shp).sum(axis=2)); plt.show()

@@ -1,3 +1,6 @@
+import sys
+sys.path.append('../')
+sys.path.append('../../')
 from argeoPET import array_lib as np
 from geant4_data_loaders import data_loader
 from plt import plt

@@ -3,17 +3,15 @@ sys.path.append('../')
 sys.path.append('../../')
 from argeoPET import array_lib as np
 import numpy
-from plt import plt
 import argeoPET.optimization_algorithms as algos
-np.cuda.Device(3).use()
-#parproj3 conda environment
+#np.cuda.Device(3).use()
 #EVERYTHING that goes into the projector MUST BE FLOAT32
 
 
 ######### INPUT
 #### DATA
-mouse_path = "data/mouse_background.npy"; mouse_down_factor = int(1) #8
-plaque_path = "data/plaque.npy"; plaque_down_factor = int(1) #16    
+mouse_path = "../data/mouse_background.npy"; mouse_down_factor = int(1) #8
+plaque_path = "../data/plaque.npy"; plaque_down_factor = int(1) #16    
 
 #### SCANNER FOV size (in same units as data)
 radius = 17.; half_axial_length = 22.05 
@@ -23,11 +21,12 @@ radius = 17.; half_axial_length = 22.05
 #### Reconstruction parameters
 Ns = 310; vol_shape = (int(Ns*half_axial_length/radius), Ns, Ns) #(1, Ns, Ns) for 2D
 nsubsets = 30 # use 1/30th of the data at a time for the OSEM algorithm
+maxiter = 70 # number of OSEM iterations
 lam = 1. # regularization parameter
 
 #### Corrections/Normalization
-pt1_path = "preprocessing/cumulative_pt1b_corrected.npy"
-sensi_path = "preprocessing/310_uniform_rec_tv_butt50.npy"
+pt1_path = "../preprocessing/cumulative_pt1b_corrected.npy"
+sensi_path = "../preprocessing/310_uniform_rec_tv_butt50.npy"
 att_path = None
 
 #### Other
@@ -55,15 +54,16 @@ Ps = project_3D_subsets(mouse_wp, nsubsets, vol_shape=vol_shape, backg=backgroun
 
 #### LOAD PT1 and NORMALIZATIONS INTO THE PROJECTOR
 from argeoPET.normalizations import load_pt1, compute_normalization_from_mumap_and_sensimap
-Ps.pt1 = load_pt1(pt1_path)
+Ps.pt1 = load_pt1(pt1_path, vol_shape)
 Ps.norm = compute_normalization_from_mumap_and_sensimap(Ps, att_path, sensi_path, percentile=20)
 
 #### RUN TV ALGO
 comp = np.percentile(Ps.pt1, 20).astype(np.float32)
-vol = algos.OSEM_TV(Ps, init=None, maxiter=70, maxiter_prox=30, lam=lam, comp=comp, force_full=False)
+vol = algos.OSEM_TV(Ps, init=None, maxiter=maxiter, maxiter_prox=30, lam=lam, comp=comp, force_full=False)
 vol = algos.OSEM_TV(Ps, init=vol, maxiter=2, maxiter_prox=30, lam=lam, comp=comp, force_full=True) # run two iterations with all dataset to "ensure" convergence
 
 #### PLOT
+from plt import plt
 pl = plt.imshow(vol.reshape(Ps.vol_shp).sum(axis=1)); plt.colorbar(pl)
 plt.imshow(vol.reshape(Ps.vol_shp).sum(axis=0))
 plt.imshow(vol.reshape(Ps.vol_shp).sum(axis=2))
@@ -81,7 +81,7 @@ cost = k(vol, s=np.s_[:]) + prior(vol.reshape(Ps.vol_shp))
 # MOUSE WITHOUT PLAQUE
 Ps_noplaque = project_3D_subsets(mouse, nsubsets, vol_shape=vol_shape, backg=background, data=data,
                         radius=radius, half_axial_length=half_axial_length, check_inside=False)
-Ps_noplaque.pt1 = load_pt1(pt1_path)
+Ps_noplaque.pt1 = load_pt1(pt1_path, vol_shape)
 Ps_noplaque.sensi = compute_normalization_from_mumap_and_sensimap(Ps_noplaque, att_path, sensi_path, percentile=20)
 
 del mouse; del plaque; del mouse_wp; del background; del data

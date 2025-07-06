@@ -3,7 +3,7 @@ sys.path.append('../')
 from argeoPET import array_lib as np
 
 
-def compute_sensitivity_from_sensimap(Ps, sensi_path=None, new_volume_shape = None, yes_mask=False, direct_domain=True):
+def compute_sensitivity_from_sensimap(Ps, sensi_path=None, yes_mask=False, direct_domain=True):
     
     if sensi_path is None:
         
@@ -14,10 +14,11 @@ def compute_sensitivity_from_sensimap(Ps, sensi_path=None, new_volume_shape = No
         
         sensi_vol = 1000.*np.load(sensi_path)
         
-        if new_volume_shape is not None: # this should be equal to Ps.vol_shp
+        if sensi_vol.shape != Ps.vol_shp:
+            print("Shape of volume and sensitivity do not match, scaling sensitivity to match")
             if "numpy" in np.__name__: from scipy.ndimage import zoom
             if "cupy" in np.__name__: from cupyx.scipy.ndimage import zoom
-            sensi_vol = np.array(zoom(sensi_vol, (np.array(new_volume_shape)/np.array(sensi_vol.shape)) )).astype(np.float32)
+            sensi_vol = np.array(zoom(sensi_vol, (np.array(Ps.vol_shp)/np.array(sensi_vol.shape)) )).astype(np.float32)
             sensi_vol = sensi_vol.flatten().astype(np.float32)
         
         sensi = Ps(sensi_vol, s=np.s_[:]).astype(np.float32)
@@ -100,16 +101,17 @@ def compute_normalization_from_mumap_and_sensimap(Ps, att_path=None, sensi_path=
     return att*sensi
 
 
-def load_pt1(pt1_path = None, new_volume_shape = None, Ps=None):
+def load_pt1(pt1_path = None, vol_shape=None, Ps=None):
     
     if pt1_path is not None: 
         
         pt1 = np.load(pt1_path)
         
-        if new_volume_shape is not None: # if pt1 was computed for another volume shape
-                if "numpy" in np.__name__: from scipy.ndimage import zoom
-                if "cupy" in np.__name__: from cupyx.scipy.ndimage import zoom
-                pt1 = np.array(zoom(pt1, (np.array(new_volume_shape)/np.array(pt1.shape)) )).astype(np.float32)
+        if pt1.shape != vol_shape: # if pt1 was computed for another volume shape
+            print("Shape of volume and PT1 do not match, scaling PT1 to match")
+            if "numpy" in np.__name__: from scipy.ndimage import zoom
+            if "cupy" in np.__name__: from cupyx.scipy.ndimage import zoom
+            pt1 = np.array(zoom(pt1, (np.array(vol_shape)/np.array(pt1.shape)) )).astype(np.float32)
                 
         pt1 = pt1.flatten().astype(np.float32)
         

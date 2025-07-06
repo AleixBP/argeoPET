@@ -1,3 +1,6 @@
+import sys
+sys.path.append('../')
+sys.path.append('../../')
 from argeoPET import array_lib as np
 # Load files from Geant .npy outputs into a shape of (2, number_of_LORS, 3), where the 3 stands for (x,y,z)
 
@@ -32,7 +35,7 @@ def all_loader(n_files, path, file_path, save=None, zfill=2):
     return dets
 
 
-def data_loader(file_name, save=False):
+def data_loader(file_name, save=None):
     
     dets = np.load(file_name)
     dets = np.array([dets[:,::2,:].squeeze(), dets[:,1::2,:].squeeze()])
@@ -56,8 +59,12 @@ def print_mateus(rec, file_name): # Transform end reconstruction into "mateus" f
 if False:
     path = "/home/saidi/2024_mouse/ini_"
     file_path = "_Full_20_250Si_0300Kapton_050W_2x2_150um_1Chip_3mmCool.conf_all.npy"
-    #all_loader(7, path, file_path, "mouse_background.npy", zfill=2)
+    #all_loader(7, path, file_path, "../data/mouse_background.npy", zfill=2)
     
     path = "/home/saidi/2024_mouse/pla_"
     plaque_path = "03_Full_20_250Si_0300Kapton_050W_2x2_150um_1Chip_3mmCool.conf_all.npy"
-    #data_loader(path+file_path, "plaque.npy")
+    #data_loader(path+file_path, "../data/plaque.npy")
+    
+    path = "/home/saidi/202506_mouse_final/"
+    file_path = "_202405_mouse_std20_init16_Full_20_250Si_0300Kapton_050W_2x2_150um_1Chip_3mmCool_all.npy"
+    #all_loader(49, path, file_path, "../data/mouse_background_many.npy", zfill=3)

@@ -25,4 +25,4 @@ python run_reconstruction.py
 
 Data:
 
-Download from https://drive.google.com/file/d/12SGINP-vNgCKZIceSaijLQxiPOOWExJl/view?usp=drive_link and merge
+Download from https://drive.google.com/file/d/12SGINP-vNgCKZIceSaijLQxiPOOWExJl/view?usp=drive_link + https://drive.google.com/file/d/1efqD4PovUZ5zxdaYGBSJes527Lcfxg7I/view?usp=drive_link and merge
