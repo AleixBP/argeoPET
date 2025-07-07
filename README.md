@@ -8,7 +8,7 @@
 First, use conda-forge as in:
 
 ```bash
-conda create argeopet-env -c conda-forge python=3.10 numpy>=1.23.5 scipy>=1.9.3  matplotlib>=3.6.2 scikit-image>=0.20 libparallelproj=1.4.0
+conda create -n argeopet-env -c conda-forge python=3.10 numpy>=1.23.5 scipy>=1.9.3  matplotlib>=3.6.2 scikit-image>=0.20 libparallelproj=1.4.0
 ```
 
 And then use pip:
@@ -21,6 +21,17 @@ pip install cupy-cuda12x>=11.4.0
 pip install plt-wrapper>=0.0.2
 ```
 
+This environment should let you run the code once you have cloned/downloaded this repository. Note that this is just an example, you might want to install a different version of Python and/or CuPy (e.g., cupy-cuda11x). You can work without CuPy, but not without NumPy. (For now) the most important is fixing parallelproj/libparallelproj to 1.4.0.
+
+---
+
+## 📦 Data
+
+Download and merge the following two zips:
+
+- [Download File 1](https://drive.google.com/file/d/12SGINP-vNgCKZIceSaijLQxiPOOWExJl/view?usp=drive_link) — Dataset with fewer detections
+- [Download File 2](https://drive.google.com/file/d/1efqD4PovUZ5zxdaYGBSJes527Lcfxg7I/view?usp=drive_link) — Dataset with many detections
+
 
 ---
 
@@ -30,15 +41,7 @@ pip install plt-wrapper>=0.0.2
 python run_reconstruction.py
 ```
 
----
-
-## 📦 Data
-
-Download and merge the following two zips:
-
-- [Download File 1](https://drive.google.com/file/d/12SGINP-vNgCKZIceSaijLQxiPOOWExJl/view?usp=drive_link)
-- [Download File 2](https://drive.google.com/file/d/1efqD4PovUZ5zxdaYGBSJes527Lcfxg7I/view?usp=drive_link)
-
+Note: you can change whether the project runs on CuPy or NumPy in __init__.py.
 
 ---
 
