@@ -48,3 +48,15 @@ Note: you can change whether the project runs on CuPy or NumPy in __init__.py.
 ## 📌 Notes
 
 - GPU support is required for CuPy
+
+---
+
+## 🙏 Acknowledgements
+
+- The 100μPET project
+- Especially, J. Saidi and M. Vicente from the University of Geneva (Geant4 + Allpix2 simulations)
+- The excellent ray tracing implemented in `parallelproj`
+
+
+
+
