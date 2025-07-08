@@ -27,7 +27,7 @@ This environment should let you run the code once you have cloned/downloaded thi
 
 ## 📦 Data
 
-Download and merge the following two zips:
+Download and merge one (or two) of the following zips:
 
 - [Download File 1](https://drive.google.com/file/d/12SGINP-vNgCKZIceSaijLQxiPOOWExJl/view?usp=drive_link) — Dataset with fewer detections
 - [Download File 2](https://drive.google.com/file/d/1efqD4PovUZ5zxdaYGBSJes527Lcfxg7I/view?usp=drive_link) — Dataset with many detections
@@ -41,7 +41,7 @@ Download and merge the following two zips:
 python run_reconstruction.py
 ```
 
-Note: you can change whether the project runs on CuPy or NumPy in __init__.py.
+Note: you can change whether the project runs on CuPy or NumPy in `__init__.py`.
 
 ---
 
