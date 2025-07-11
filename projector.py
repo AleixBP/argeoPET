@@ -3,15 +3,16 @@ from argeoPET import array_lib as np
 # PROJECTION and BACKPROJECTION class for LM data
 class project_3D_subsets():
       
-    def __init__(self, detections, nsubsets, norm=None, backg=1e-5, data=1., pt1=None, vol_shape=(402,310,310), radius=17, half_axial_length=22.05, is_3d = True, num_chunks=1, check_inside=False):  
+    def __init__(self, detections, nsubsets, norm=None, backg=1e-5, data=1., pt1=None, vol_shape=(402,310,310), radius=17, half_axial_length=22.05, 
+                 voxel_size=None, img_origin=None, is_3d = True, num_chunks=1, check_inside=False):  
         
         
         self.vol_shp = vol_shape #2D format is (1, N, N)
 
 
         # Origin and voxels in physical units
-        self.voxel_size = (2*np.array([half_axial_length, radius, radius])/np.array(vol_shape)).astype(np.float32)
-        self.img_origin = ((-np.array(self.vol_shp)/ 2 + 0.5) * self.voxel_size).astype(np.float32)
+        self.voxel_size = voxel_size if voxel_size is not None else (2*np.array([half_axial_length, radius, radius])/np.array(vol_shape)).astype(np.float32)
+        self.img_origin = img_origin if img_origin is not None else ((-np.array(self.vol_shp)/ 2 + 0.5) * self.voxel_size).astype(np.float32)
         self.radius = radius
         self.half_axial_length = half_axial_length
         self.num_chunks = num_chunks

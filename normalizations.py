@@ -3,7 +3,7 @@ sys.path.append('../')
 from argeoPET import array_lib as np
 
 
-def compute_sensitivity_from_sensimap(Ps, sensi_path=None, yes_mask=False, direct_domain=True):
+def compute_sensitivity_from_sensimap(Ps, sensi_path=None, yes_mask=False, direct_domain=True, crop=None):
     
     if sensi_path is None:
         
@@ -13,6 +13,8 @@ def compute_sensitivity_from_sensimap(Ps, sensi_path=None, yes_mask=False, direc
     if direct_domain: # from reconstructed volume
         
         sensi_vol = 1000.*np.load(sensi_path)
+        if crop is not None:
+            sensi_vol = sensi_vol[crop]
         
         if sensi_vol.shape != Ps.vol_shp:
             print("Shape of volume and sensitivity do not match, scaling sensitivity to match")
@@ -56,7 +58,20 @@ def compute_sensitivity_from_sensimap(Ps, sensi_path=None, yes_mask=False, direc
     
 def compute_attenuation_from_mumap(Ps, att_path=None, yes_mask=False):
     
+    ##### Hard coding to change later
+    #Make backup
+    img_origin_backup = Ps.img_origin.copy()
+    voxel_size_backup = Ps.voxel_size.copy()
+    vol_shp_backup = Ps.vol_shp
+    
+    # Original dimensions    
+    Ps.vol_shp = (402,310,310)
+    Ps.voxel_size = (2*np.array([Ps.half_axial_length, Ps.radius, Ps.radius])/np.array(Ps.vol_shp)).astype(np.float32)
+    Ps.img_origin = ((-np.array(Ps.vol_shp)/ 2 + 0.5) * Ps.voxel_size).astype(np.float32)
+    
+    #### Start
     vol_shp = Ps.vol_shp
+    
     
     if att_path is not None: 
         
@@ -75,11 +90,18 @@ def compute_attenuation_from_mumap(Ps, att_path=None, yes_mask=False):
         non_mask = att_sino>pixel_thresh
         att_sino = np.exp(-att_sino[non_mask]).astype(np.float32)
         
+        #### UNDO
+        Ps.vol_shp = vol_shp_backup; Ps.voxel_size = voxel_size_backup; Ps.img_origin = img_origin_backup
+        
         return att_sino, non_mask
     
     else:
         
-        return np.exp(-Ps(att_phantom, s=np.s_[:]).astype(np.float64)).astype(np.float32)
+        att_sino = np.exp(-Ps(att_phantom, s=np.s_[:]).astype(np.float64)).astype(np.float32)
+        
+        #### UNDO
+        Ps.vol_shp = vol_shp_backup; Ps.voxel_size = voxel_size_backup; Ps.img_origin = img_origin_backup
+        return att_sino
 
 
 def cylinder_mask(vol_shp): #cylinder inscribed in vol_shp (considering square x,y)
@@ -92,20 +114,23 @@ def cylinder_mask(vol_shp): #cylinder inscribed in vol_shp (considering square x
     return np.repeat(circle[np.newaxis,:], repeats=vol_shp[0],  axis=0).astype(np.float32)
 
 
-def compute_normalization_from_mumap_and_sensimap(Ps, att_path=None, sensi_path=None, percentile=20):
+def compute_normalization_from_mumap_and_sensimap(Ps, att_path=None, sensi_path=None, percentile=20, crop=None):
     
     att = compute_attenuation_from_mumap(Ps, att_path)
-    sensi = compute_sensitivity_from_sensimap(Ps, sensi_path)
+    att = np.maximum(att, np.percentile(att, percentile)).astype(np.float32)
+    sensi = compute_sensitivity_from_sensimap(Ps, sensi_path, crop=crop)
     sensi = np.maximum(sensi, np.percentile(sensi, percentile)).astype(np.float32)
     
     return att*sensi
 
 
-def load_pt1(pt1_path = None, vol_shape=None, Ps=None):
+def load_pt1(pt1_path = None, vol_shape=None, Ps=None, crop=None):
     
     if pt1_path is not None: 
         
         pt1 = np.load(pt1_path)
+        if crop is not None:
+            pt1 = pt1[crop]
         
         if pt1.shape != vol_shape: # if pt1 was computed for another volume shape
             print("Shape of volume and PT1 do not match, scaling PT1 to match")
