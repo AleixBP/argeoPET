@@ -396,7 +396,7 @@ class TV_cost():
         self.iter_func = lambda x: x if iter_func is None else iter_func
         self.acc = acc
 
-        self.tv_ct = 8. #12. for 3D?
+        self.tv_ct = 8. #12. for 3D
 
         if proj is None:
             self.proj = lambda x: x

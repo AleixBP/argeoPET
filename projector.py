@@ -85,7 +85,7 @@ class project_3D_subsets():
         # the input is an image vol of size np.ones(self.vol_shp, dtype=np.float32)
         
         # automatic random
-        ind = int(np.random.randint(0, self.nsubsets)) if ind is None else ind
+        self.ind = ind = int(np.random.randint(0, self.nsubsets)) if ind is None else ind
         s = self.subsets[ind] if s is None else s #self.subsets[ind].ravel() 
         
         # allocate memory for the forward projection array, force slice count via xstart
