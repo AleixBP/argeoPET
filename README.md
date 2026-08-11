@@ -53,7 +53,7 @@ Note: you can change whether the project runs on CuPy or NumPy in `__init__.py`.
 
 ## 🙏 Acknowledgements
 
-- The 100μPET project
+- The 100μPET project (i.e. Sinergia Grant CRSII5_198569)
 - Especially, J. Saidi and M. Vicente from the University of Geneva (Geant4 + Allpix2 simulations)
 - The excellent ray tracing implemented in `parallelproj`
 
